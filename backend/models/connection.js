@@ -1,0 +1,17 @@
+const {Pool}= require('pg')
+
+const pool=new pool({
+    max: 20,
+    idleTimeoutMilis: 30000
+})
+
+pool.connect((err,client,release)=>{
+    if(err) console.log(err);
+    console.log("Successfully connected Database");
+    release();
+})
+
+module.exports={
+    client: ()=>pool.connect(),
+    query: (text,params)=> pool.query(text,params)
+}
