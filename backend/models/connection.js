@@ -1,6 +1,6 @@
 const {Pool}= require('pg')
 
-const pool=new pool({
+const pool=new Pool({
     max: 20,
     idleTimeoutMilis: 30000
 })
