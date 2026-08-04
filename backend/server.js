@@ -12,6 +12,8 @@ const userRoute = require('./routes/signup.route');
 const allDetailsRoute = require('./routes/details.route');
 const loginRoute = require('./routes/login.route');
 const delRoute = require('./routes/delete.route');
+const profileRoute = require('./routes/profile.route');
+
 const authentication = require('./middlewares/auth.middleware');
 
 const db=require('./models/connection');
@@ -43,7 +45,7 @@ app.use('/users', loginRoute)
 
 app.use('/users',delRoute)
 
-app.use()
+app.use('/',profileRoute)
 
 app.listen(PORT,(err)=>{
     if(err) console.log(err);

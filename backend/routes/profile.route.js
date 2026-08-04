@@ -5,3 +5,5 @@ const profileRoute=require('express').Router()
 
 profileRoute
 .patch('/profile',authentication,updateProfile)
+
+module.exports=profileRoute
