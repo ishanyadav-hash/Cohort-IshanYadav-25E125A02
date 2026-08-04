@@ -8,14 +8,21 @@ app.use(cors())
 
 require('dotenv').config()
 
-const {initDatabase}=require('./controllers/initDB')
+const userRoute = require('./routes/signup.route');
+const allDetailsRoute = require('./routes/details.route');
+const loginRoute = require('./routes/login.route');
+const delRoute = require('./routes/delete.route');
+const authentication = require('./middlewares/auth.middleware');
 
 const db=require('./models/connection');
 
-const userRoute = require('./routes/signup.route');
-const allDetailsRoute = require('./routes/details.route');
+const {initDatabase}=require('./controllers/initDB')
 
 initDatabase();
+
+const cookieParser = require("cookie-parser");
+
+app.use(cookieParser());
 
 app.use(express.json())
 app.use(express.urlencoded({extended: false}))
@@ -32,93 +39,9 @@ app.use('/users', allDetailsRoute)
 
 app.use('/users',userRoute)
 
-app.post('/login', async(req,res)=>{
-    const {name,password}=req.body
+app.use('/users', loginRoute)
 
-    try{
-        const findUserQuery=`
-        SELECT * FROM demo
-        WHERE name=$1 AND password=$2`;
-
-        const result= await db.query(findUserQuery,[name,password]);
-
-        res.status(200).json({
-            status: "Success",
-            message: "Login Successful",
-            data: result.rows[0]
-        })
-    } catch(error){
-        return res.status(500).json({
-            status: "Failed",
-            message:"Something went wrong",
-            error: error
-        })
-    }
-})
-
-app.patch('/profile', async (req, res) => {
-    const {name,currentPassword,newPassword,email,age} = req.body;
-    try {
-        const checkUserQuery = `
-        SELECT * FROM demo
-        WHERE name = $1 AND password = $2;
-        `;
-        const user = await db.query(checkUserQuery, [name, currentPassword]);
-
-        if (newPassword.length < 8) {
-            return res.status(400).json({
-                status: "Failed",
-                message: "Password must be at least 8 characters."
-            });
-        }
-        const updateUserQuery = `
-        UPDATE demo
-        SET email=$3,password=$4,age=$5
-        WHERE name = $1 AND password=$2
-        RETURNING id, name, regd_no, email, age;
-        `;
-
-        const result = await db.query(updateUserQuery, [name,currentPassword,email,newPassword,age]);
-
-        res.status(200).json({
-            status: "Success",
-            message: "Profile updated successfully",
-            data: result.rows[0]
-        });
-
-    } catch (error) {
-        res.status(500).json({
-            status: "Failed",
-            message: "Something went wrong",
-            error
-        });
-    }
-});
-
-app.delete('/profile', async(req,res)=>{
-    const {name,password}=req.body
-
-    try{
-        const delUserQuery=`
-        DELETE FROM demo
-        WHERE name=$1 AND password=$2
-        RETURNING *`;
-
-        const result= await db.query(delUserQuery,[name,password]);
-
-        res.status(204).json({
-            status: "Success",
-            message: "Deleted Successful",
-            data: result.rows[0]
-        })
-    } catch(error){
-        return res.status(500).json({
-            status: "Failed",
-            message:"Something went wrong",
-            error: error
-        })
-    }
-})
+app.use('/users',delRoute)
 
 app.listen(PORT,(err)=>{
     if(err) console.log(err);
