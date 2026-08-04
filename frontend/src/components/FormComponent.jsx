@@ -25,7 +25,7 @@ function FormComponent(){
         };
 
         try{
-            const res = await axios.post("http://localhost:3000/users",user)
+            const res = await axios.post("http://localhost:3000/users/",user)
             alert("User created successfully")
             setName("");
             setRegno("");

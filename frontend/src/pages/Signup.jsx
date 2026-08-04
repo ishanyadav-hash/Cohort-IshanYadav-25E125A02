@@ -9,7 +9,7 @@ function Signup() {
                 <h1 className="text-3xl font-bold text-center mb-6">
                     Create Account
                 </h1>
-                <FormComponent></FormComponent>
+                <FormComponent/>
                 <p className="text-center mt-5">
                     Already have an account?{" "}
                     <Link to="/login" className="text-blue-600">

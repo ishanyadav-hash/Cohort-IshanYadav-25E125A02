@@ -4,7 +4,7 @@ const app=express();
 
 const cors=require('cors')
 
-app.use(cors())
+app.use(cors({credentials: true}))
 
 require('dotenv').config()
 
