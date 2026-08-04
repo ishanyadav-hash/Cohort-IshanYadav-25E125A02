@@ -1,5 +1,6 @@
 import { useState } from "react"
 import axios from "axios"
+import { useNavigate } from "react-router-dom";
 
 function FormComponent(){
     const [name,setName]=useState("");
@@ -7,7 +8,8 @@ function FormComponent(){
     const [email,setEmail]=useState("");
     const [password,setPassword]=useState("");
     const [age,setAge]=useState("");
-    
+    const navigate=useNavigate();
+
     async function handleClick(e){
         e.preventDefault();
 
@@ -25,13 +27,17 @@ function FormComponent(){
         };
 
         try{
-            const res = await axios.post("http://localhost:3000/users/",user)
+            const res = await axios.post("http://localhost:3000/users/",user,{withCredentials:true})
             alert("User created successfully")
             setName("");
             setRegno("");
             setEmail("");
             setPassword("");
             setAge("");
+
+            if(res.data.status==="Success"){
+                navigate("/login")
+            }
         } catch(error){
             console.log(error)
         }
@@ -44,8 +50,8 @@ function FormComponent(){
             <input type="text" placeholder="Enter Name" value={name} onChange={(e)=>setName(e.target.value)}/>
             <input type="text" placeholder="Enter Registration no." value={regd_no} onChange={(e)=>setRegno(e.target.value)}/>
             <input type="text" placeholder="Enter Email" value={email} onChange={(e)=>setEmail(e.target.value)}/>
-            <input type="text" placeholder="Enter Password" value={password} onChange={(e)=>setPassword(e.target.value)}/>
-            <input type="text" placeholder="Enter Age" value={age} onChange={(e)=>setAge(e.target.value)}/>
+            <input type="password" placeholder="Enter Password" value={password} onChange={(e)=>setPassword(e.target.value)}/>
+            <input type="age" placeholder="Enter Age" value={age} onChange={(e)=>setAge(e.target.value)}/>
 
             <button type="submit">Submit</button>
         </form>

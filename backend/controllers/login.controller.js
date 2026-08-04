@@ -10,7 +10,6 @@ const login= async(req,res)=>{
                 message:"Email and password required"
             })
         }
-
         const findUserQuery=`
         SELECT * FROM demo
         WHERE email=$1`;

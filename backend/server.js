@@ -4,7 +4,7 @@ const app=express();
 
 const cors=require('cors')
 
-app.use(cors({credentials: true}))
+app.use(cors({origin: "http://localhost:5173",credentials: true}))
 
 require('dotenv').config()
 
@@ -45,7 +45,7 @@ app.use('/users', loginRoute)
 
 app.use('/users',delRoute)
 
-app.use('/',profileRoute)
+app.use('/users',profileRoute)
 
 app.listen(PORT,(err)=>{
     if(err) console.log(err);

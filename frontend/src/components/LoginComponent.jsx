@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 function LoginComponent(){
     const [email,setEmail]=useState("");
     const [password,setPassword]=useState("");  
+    const navigate= useNavigate()
 
     async function handleClick(e) {
         e.preventDefault();
@@ -15,9 +16,7 @@ function LoginComponent(){
         }
 
         const user={email,password};
-
-        const navigate= useNavigate()
-
+        
         try{
             const res=await axios.post("http://localhost:3000/users/login",user,{withCredentials: true})
             setEmail("")
@@ -35,12 +34,11 @@ function LoginComponent(){
     return(
         <>
         <form onSubmit={handleClick}>
-            <input placeholder="Enter email" value={email} onChange={(e)=>setEmail(e.target.value)}/>
-            <input placeholder="Enter Password" value={password} onChange={(e)=>setPassword(e.target.value)}/>
+            <input type="text" placeholder="Enter email" value={email} onChange={(e)=>setEmail(e.target.value)}/>
+            <input type="password" placeholder="Enter Password" value={password} onChange={(e)=>setPassword(e.target.value)}/>
 
             <button type="submit">Submit</button>
         </form>
-        
         </>
     )
 }

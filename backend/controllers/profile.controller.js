@@ -1,13 +1,12 @@
 const {hashPassword,comparePassword}=require('../utils/password')
 const {generateToken,setToken,clearToken}=require('../utils/jwt')
 const db = require("../models/connection")
-const login = require('./login.controller')
 
 const updateProfile= async(req,res)=>{
-    const {email,password,age}=req.body()
+    const {email,password,age}=req.body
 
     try{
-        const {oldEmail}=req.user.email
+        const oldEmail=req.user.email
 
         const user= await db.query(`SELECT * FROM demo WHERE email=$1`,[oldEmail])
 
@@ -23,7 +22,7 @@ const updateProfile= async(req,res)=>{
             newPassword=await hashPassword(password)
         }
 
-        const existing = await db.query("SELECT * FROM demo WHERE email=$1",[email])
+        const existing = await db.query("SELECT * FROM demo WHERE email=$1",[oldEmail])
         
         if (email && existing.rows.length > 0) {
             return res.status(400).json({
@@ -39,16 +38,41 @@ const updateProfile= async(req,res)=>{
         WHERE email=$4
         RETURNING *
         `
-        const result = await db.query(updateQuery, [updatedEmail,updatedPassword,updatedAge,currentEmail]);
+        const result = await db.query(updateQuery, [updatedEmail,newPassword,updatedAge,oldEmail]);
+
+        const {password:_,...noPass}=result.rows[0]
 
         return res.json({
             status:"Success",
             message:"Profile updated",
-            data: result.rows[0]
+            data: noPass
         })
     } catch(error){
         console.log(error)
     }
 }
 
-module.exports=updateProfile
+const getProfile = async (req, res) => {
+
+    try {
+        const email = req.user.email;
+
+        const result = await db.query(`SELECT id, name, regd_no, email, age FROM demo WHERE email=$1`,[email]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({
+                message: "User not found"
+            });
+        }
+        return res.status(200).json({
+            status: "Success",
+            data: result.rows[0]
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        });
+    }
+};
+
+module.exports={updateProfile,getProfile}
