@@ -4,6 +4,6 @@ const authentication = require('../middlewares/auth.middleware')
 const delRoute=require('express').Router()
 
 delRoute
-.delete('/delete',authentication,deleteUser)
+.delete('/profile',authentication,deleteUser)
 
 module.exports=delRoute
