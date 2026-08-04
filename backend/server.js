@@ -10,7 +10,10 @@ require('dotenv').config()
 
 const {initDatabase}=require('./controllers/initDB')
 
-const db=require('./models/connection')
+const db=require('./models/connection');
+
+const userRoute = require('./routes/signup.route');
+const allDetailsRoute = require('./routes/details.route');
 
 initDatabase();
 
@@ -25,65 +28,9 @@ app.get('/',(req,res)=>{
     })
 })
 
-app.get('/users', async(req,res)=>{
-    try{
-        const getUsersQuery=`
-        SELECT * FROM demo;`
+app.use('/users', allDetailsRoute)
 
-        const result= await db.query(getUsersQuery);
-
-        res.status(200).json({
-            status: "Success",
-            message: "All users fetched",
-            data: result.rows
-        })
-    } catch(error){
-        return res.status(500).json({
-            status: "Failed",
-            message:"Something went wrong",
-            error: error
-        })
-    }
-})
-
-app.post('/users', async(req,res)=>{
-    const {name,regd_no,email,password,age}=req.body
-
-    if (password.length < 8) {
-        return res.status(400).json({
-            status: "Failed",
-            message: "Password must be at least 8 characters."
-        });
-    }
-
-    if (regd_no.length !== 10) {
-        return res.status(400).json({
-            status: "Failed",
-            message: "Registration number must be exactly 10 characters."
-        });
-    }
-
-    try{
-        const newUserQuery=`
-        INSERT INTO demo(name,regd_no,email,password,age)
-        VALUES ($1,$2,$3,$4,$5)
-        RETURNING id,name,regd_no,email,password,age`;
-
-        const result= await db.query(newUserQuery,[name,regd_no,email,password,age]);
-
-        res.status(201).json({
-            status: "Success",
-            message: "Created",
-            data: result.rows[0]
-        })
-    } catch(error){
-        return res.status(500).json({
-            status: "Failed",
-            message:"Something went wrong",
-            error: error
-        })
-    }
-})
+app.use('/users',userRoute)
 
 app.post('/login', async(req,res)=>{
     const {name,password}=req.body
