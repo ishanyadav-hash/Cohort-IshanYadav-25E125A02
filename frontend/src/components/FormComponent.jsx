@@ -45,7 +45,6 @@ function FormComponent(){
 
     return(
         <>
-        <div className="min-h-screen min-w-screen flex justify-center items-center">
         <form onSubmit={handleClick}>
             <input type="text" placeholder="Enter Name" value={name} onChange={(e)=>setName(e.target.value)}/>
             <input type="text" placeholder="Enter Registration no." value={regd_no} onChange={(e)=>setRegno(e.target.value)}/>
@@ -55,7 +54,6 @@ function FormComponent(){
 
             <button type="submit">Submit</button>
         </form>
-        </div>
         </>
     )
 }

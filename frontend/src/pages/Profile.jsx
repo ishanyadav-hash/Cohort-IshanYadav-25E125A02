@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 function Profile() {
 
@@ -25,6 +26,9 @@ function Profile() {
         <p>Email: {user.email}</p>
         <p>Registration No: {user.regd_no}</p>
         <p>Age: {user.age}</p>
+        <button><Link to="/logout">LOGOUT</Link></button>
+        <button><Link to="/delete"></Link>Delete Account</button>
+        <button><Link to="/update"></Link>Update Account Information</button>
         </>
     );
 }
